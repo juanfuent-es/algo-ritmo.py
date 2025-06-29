@@ -1,0 +1,130 @@
+<!-- Task Modal -->
+<div class="modal fade" id="taskModal" tabindex="-1" aria-labelledby="taskModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="taskModalLabel">
+                    <i class="bi bi-plus-circle me-2"></i>Nueva Tarea
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="taskForm">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-12 mb-3">
+                            <label for="taskTitle" class="form-label">
+                                <i class="bi bi-type me-1"></i>Título <span class="text-danger">*</span>
+                            </label>
+                            <input type="text" class="form-control" id="taskTitle" name="title" 
+                                   placeholder="Ingresa el título de la tarea" required>
+                            <div class="invalid-feedback">
+                                El título es requerido
+                            </div>
+                        </div>
+                        
+                        <div class="col-12 mb-3">
+                            <label for="taskDescription" class="form-label">
+                                <i class="bi bi-text-paragraph me-1"></i>Descripción
+                            </label>
+                            <textarea class="form-control" id="taskDescription" name="description" 
+                                      rows="3" placeholder="Describe los detalles de la tarea (opcional)"></textarea>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="taskPriority" class="form-label">
+                                <i class="bi bi-flag me-1"></i>Prioridad
+                            </label>
+                            <select class="form-select" id="taskPriority" name="priority">
+                                <option value="low">Baja</option>
+                                <option value="medium" selected>Media</option>
+                                <option value="high">Alta</option>
+                            </select>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="taskDueDate" class="form-label">
+                                <i class="bi bi-calendar me-1"></i>Fecha de vencimiento
+                            </label>
+                            <input type="date" class="form-control" id="taskDueDate" name="due_date">
+                        </div>
+                    </div>
+                    
+                    <!-- Priority Preview -->
+                    <div class="alert alert-info" id="priorityPreview" style="display: none;">
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-info-circle me-2"></i>
+                            <div>
+                                <strong>Prioridad:</strong> <span id="priorityText"></span>
+                                <br>
+                                <small class="text-muted" id="priorityDescription"></small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="bi bi-x-circle me-1"></i>Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-primary" id="saveTaskBtn">
+                        <i class="bi bi-check-circle me-1"></i>Guardar Tarea
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-danger" id="deleteModalLabel">
+                    <i class="bi bi-exclamation-triangle me-2"></i>Confirmar Eliminación
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>¿Estás seguro de que deseas eliminar la tarea "<strong id="deleteTaskTitle"></strong>"?</p>
+                <p class="text-muted small">Esta acción no se puede deshacer.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="bi bi-x-circle me-1"></i>Cancelar
+                </button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteBtn">
+                    <i class="bi bi-trash me-1"></i>Eliminar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Success Toast -->
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div id="successToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header bg-success text-white">
+            <i class="bi bi-check-circle me-2"></i>
+            <strong class="me-auto">Éxito</strong>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"></button>
+        </div>
+        <div class="toast-body" id="successMessage">
+            Operación completada exitosamente
+        </div>
+    </div>
+</div>
+
+<!-- Error Toast -->
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div id="errorToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header bg-danger text-white">
+            <i class="bi bi-exclamation-triangle me-2"></i>
+            <strong class="me-auto">Error</strong>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"></button>
+        </div>
+        <div class="toast-body" id="errorMessage">
+            Ha ocurrido un error
+        </div>
+    </div>
+</div> 

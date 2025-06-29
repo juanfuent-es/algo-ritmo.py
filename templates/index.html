@@ -1,0 +1,209 @@
+{% extends "base.html" %}
+
+{% block title %}TaskMaster - Control de Tareas{% endblock %}
+
+{% block content %}
+<!-- Header Section -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h1 class="h2 mb-1">
+                    <i class="bi bi-check2-square text-primary me-2"></i>
+                    Mis Tareas
+                </h1>
+                <p class="text-muted mb-0">Organiza y gestiona tus tareas de manera eficiente</p>
+            </div>
+            <div class="d-flex gap-2">
+                <button class="btn btn-outline-primary" id="refreshBtn" title="Actualizar">
+                    <i class="bi bi-arrow-clockwise"></i>
+                </button>
+                <button class="btn btn-outline-secondary" id="filterBtn" title="Filtrar">
+                    <i class="bi bi-funnel"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Statistics Cards -->
+<div class="row mb-4">
+    <div class="col-md-3 mb-3">
+        <div class="card stats-card h-100">
+            <div class="card-body text-center">
+                <i class="bi bi-list-ul fs-1 mb-2"></i>
+                <div class="stats-number" id="totalTasks">0</div>
+                <div class="small">Total Tareas</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card stats-card h-100">
+            <div class="card-body text-center">
+                <i class="bi bi-clock fs-1 mb-2"></i>
+                <div class="stats-number" id="pendingTasks">0</div>
+                <div class="small">Pendientes</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card stats-card h-100">
+            <div class="card-body text-center">
+                <i class="bi bi-check-circle fs-1 mb-2"></i>
+                <div class="stats-number" id="completedTasks">0</div>
+                <div class="small">Completadas</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card stats-card h-100">
+            <div class="card-body text-center">
+                <i class="bi bi-exclamation-triangle fs-1 mb-2"></i>
+                <div class="stats-number" id="overdueTasks">0</div>
+                <div class="small">Vencidas</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Filter Section -->
+<div class="row mb-4" id="filterSection" style="display: none;">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <h6 class="card-title mb-3">
+                    <i class="bi bi-funnel me-2"></i>Filtros
+                </h6>
+                <div class="row">
+                    <div class="col-md-3 mb-3">
+                        <label for="priorityFilter" class="form-label">Prioridad</label>
+                        <select class="form-select" id="priorityFilter">
+                            <option value="">Todas las prioridades</option>
+                            <option value="high">Alta</option>
+                            <option value="medium">Media</option>
+                            <option value="low">Baja</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="statusFilter" class="form-label">Estado</label>
+                        <select class="form-select" id="statusFilter">
+                            <option value="">Todos los estados</option>
+                            <option value="pending">Pendientes</option>
+                            <option value="completed">Completadas</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="dateFilter" class="form-label">Fecha de vencimiento</label>
+                        <input type="date" class="form-control" id="dateFilter">
+                    </div>
+                    <div class="col-md-3 mb-3 d-flex align-items-end">
+                        <button class="btn btn-outline-secondary w-100" id="clearFilters">
+                            <i class="bi bi-x-circle me-1"></i>Limpiar filtros
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Tasks List -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-white">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="bi bi-list-check me-2"></i>Lista de Tareas
+                    </h5>
+                    <div class="d-flex gap-2">
+                        <span class="badge bg-primary" id="taskCount">0 tareas</span>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body p-0">
+                <!-- Loading Spinner -->
+                <div id="loadingSpinner" class="text-center py-5" style="display: none;">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Cargando...</span>
+                    </div>
+                    <p class="mt-2 text-muted">Cargando tareas...</p>
+                </div>
+                
+                <!-- Empty State -->
+                <div id="emptyState" class="text-center py-5" style="display: none;">
+                    <i class="bi bi-inbox fs-1 text-muted mb-3"></i>
+                    <h5 class="text-muted">No hay tareas</h5>
+                    <p class="text-muted">¡Comienza agregando tu primera tarea!</p>
+                    <button class="btn btn-primary" id="addFirstTask">
+                        <i class="bi bi-plus me-1"></i>Agregar Tarea
+                    </button>
+                </div>
+                
+                <!-- Tasks Container -->
+                <div id="tasksContainer">
+                    <!-- Las tareas se cargarán dinámicamente aquí -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Task Template (Hidden) -->
+<template id="taskTemplate">
+    <div class="task-item card border-0 shadow-sm mb-3 fade-in">
+        <div class="card-body">
+            <div class="row align-items-center">
+                <div class="col-auto">
+                    <div class="form-check">
+                        <input class="form-check-input task-checkbox" type="checkbox" data-task-id="">
+                        <label class="form-check-label"></label>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div class="flex-grow-1">
+                            <h6 class="task-title mb-1 fw-bold"></h6>
+                            <p class="task-description text-muted small mb-2"></p>
+                            <div class="d-flex gap-2 align-items-center">
+                                <span class="task-priority-badge badge"></span>
+                                <span class="task-due-date text-muted small"></span>
+                                <span class="task-overdue-badge badge bg-danger" style="display: none;">Vencida</span>
+                            </div>
+                        </div>
+                        <div class="dropdown">
+                            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                <i class="bi bi-three-dots-vertical"></i>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item edit-task" href="#"><i class="bi bi-pencil me-2"></i>Editar</a></li>
+                                <li><a class="dropdown-item delete-task" href="#"><i class="bi bi-trash me-2"></i>Eliminar</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Variables globales para el estado de la aplicación
+    window.currentFilter = 'all';
+    window.tasks = [];
+    
+    // Inicializar la aplicación cuando el DOM esté listo
+    document.addEventListener('DOMContentLoaded', function() {
+        // Cargar tareas iniciales
+        loadTasks();
+        
+        // Configurar event listeners
+        setupEventListeners();
+        
+        // Actualizar estadísticas
+        updateStatistics();
+    });
+</script>
+{% endblock %} 
