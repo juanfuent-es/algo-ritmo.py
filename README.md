@@ -74,14 +74,32 @@ http://localhost:5000
 
 ¡Listo! Ya deberías ver tu sistema de tareas funcionando.
 
+## 🌐 Deploy en la web (Render.com)
+
+¿Quieres que tu aplicación esté disponible en internet? Puedes desplegarla gratis en Render.com:
+
+### Opción 1: Instalación automática
+1. Sube tu código a GitHub
+2. Ve a [render.com](https://render.com)
+3. Conecta tu repositorio
+4. ¡Listo! Tu app estará disponible en la web
+
+### Opción 2: Configuración manual
+Consulta el archivo `DEPLOY.md` para instrucciones detalladas.
+
 ## 📁 Estructura del proyecto
 
 ```
 algo-ritmo.py/
 ├── app.py                 # Archivo principal de la aplicación
 ├── requirements.txt       # Lista de dependencias
+├── render.yaml           # Configuración para Render.com
+├── runtime.txt           # Versión de Python
+├── Procfile              # Comando de inicio para producción
 ├── README.md             # Este archivo
 ├── ABOUT.md              # Información detallada del proyecto
+├── DEPLOY.md             # Guía de deploy
+├── INSTRUCCIONES_RAPIDAS.md # Instrucciones rápidas
 ├── models/               # Carpeta con las clases de datos
 │   ├── __init__.py
 │   ├── task.py           # Clase que representa una tarea
@@ -142,6 +160,7 @@ algo-ritmo.py/
 - **Base de datos**: Donde se guardan las tareas (SQLite)
 - **API**: Forma de comunicación entre frontend y backend
 - **MVC**: Patrón de organización del código (Modelo, Vista, Controlador)
+- **Deploy**: Proceso de subir tu aplicación a internet
 
 ## 🤝 Contribuir
 

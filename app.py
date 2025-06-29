@@ -4,7 +4,7 @@ from models.database import Database
 import os
 
 app = Flask(__name__)
-app.secret_key = 'tu_clave_secreta_aqui'
+app.secret_key = os.environ.get('SECRET_KEY', 'tu_clave_secreta_aqui')
 
 # Configuración de la base de datos
 db_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'database', 'tasks.db')
@@ -90,7 +90,18 @@ def toggle_task(task_id):
     database.update_task(task)
     return jsonify(task.to_dict())
 
+# Crear la base de datos al iniciar la aplicación
+@app.before_first_request
+def init_database():
+    """Inicializar la base de datos antes del primer request"""
+    database.init_database()
+
 if __name__ == '__main__':
+    # Configuración para desarrollo local
+    port = int(os.environ.get('PORT', 5000))
+    debug = os.environ.get('FLASK_ENV') == 'development'
+    
     # Crear la base de datos si no existe
     database.init_database()
-    app.run(debug=True, host='0.0.0.0', port=5000) 
+    
+    app.run(debug=debug, host='0.0.0.0', port=port) 
