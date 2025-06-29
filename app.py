@@ -1,14 +1,18 @@
 from flask import Flask, render_template, request, jsonify, redirect, url_for
 from models.task import Task
 from models.database import Database
+from config import Config
 import os
 
 app = Flask(__name__)
-app.secret_key = os.environ.get('SECRET_KEY', 'tu_clave_secreta_aqui')
+app.config.from_object(Config)
 
 # Configuración de la base de datos
-db_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'database', 'tasks.db')
-database = Database(db_path)
+database = Database(app.config['DATABASE_PATH'])
+
+# Inicializar la base de datos al crear la aplicación
+with app.app_context():
+    database.init_database()
 
 @app.route('/')
 def index():
@@ -90,18 +94,14 @@ def toggle_task(task_id):
     database.update_task(task)
     return jsonify(task.to_dict())
 
-# Crear la base de datos al iniciar la aplicación
-@app.before_first_request
-def init_database():
-    """Inicializar la base de datos antes del primer request"""
-    database.init_database()
+@app.route('/health')
+def health_check():
+    """Endpoint para verificar el estado de la aplicación"""
+    return jsonify({'status': 'healthy', 'message': 'TaskMaster API is running'})
 
 if __name__ == '__main__':
-    # Configuración para desarrollo local
-    port = int(os.environ.get('PORT', 5000))
-    debug = os.environ.get('FLASK_ENV') == 'development'
-    
-    # Crear la base de datos si no existe
-    database.init_database()
-    
-    app.run(debug=debug, host='0.0.0.0', port=port) 
+    app.run(
+        debug=app.config['DEBUG'],
+        host=app.config['HOST'],
+        port=app.config['PORT']
+    ) 

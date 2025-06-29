@@ -1,0 +1,2 @@
+# Este archivo asegura que el directorio database se mantenga en el repositorio
+# La base de datos SQLite se creará automáticamente cuando se ejecute la aplicación 
