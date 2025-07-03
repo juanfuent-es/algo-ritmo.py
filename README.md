@@ -1,4 +1,4 @@
-# 📝 TaskMaster - Sistema de Control de Tareas
+# 📝 algoRitmo.py - Sistema de Control de Tareas
 
 Un sistema simple y efectivo para organizar tus tareas diarias, creado con tecnologías web básicas.
 

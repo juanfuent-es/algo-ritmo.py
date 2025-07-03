@@ -1,3 +1,14 @@
+# algoRitmo.py - Módulo de acceso a datos y gestión de la base de datos
+# Proyecto: algoRitmo.py
+# Autor: JuanFuent.es
+# Descripción: Este archivo define la clase Database, que maneja la conexión y operaciones CRUD sobre SQLite.
+# Documentación SQLite: https://docs.python.org/3/library/sqlite3.html
+# Documentación sobre patrones DAO: https://en.wikipedia.org/wiki/Data_access_object
+#
+# Referencias:
+# - https://flask.palletsprojects.com/en/2.3.x/patterns/sqlite3/
+# - https://docs.python.org/3/library/datetime.html
+#
 import sqlite3
 import os
 from typing import List, Optional
@@ -38,11 +49,12 @@ class Database:
         return conn
     
     def init_database(self) -> None:
-        """Inicializa la base de datos creando las tablas necesarias"""
+        """Inicializa la base de datos creando las tablas necesarias (si no existen).
+        Crea la tabla 'tasks' para almacenar las tareas del usuario.
+        """
         conn = self._get_connection()
         cursor = conn.cursor()
-        
-        # Crear tabla de tareas
+        # Crear tabla de tareas si no existe
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS tasks (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -55,7 +67,6 @@ class Database:
                 updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )
         ''')
-        
         conn.commit()
         conn.close()
     

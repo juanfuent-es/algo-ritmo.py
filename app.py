@@ -1,3 +1,16 @@
+# algoRitmo.py - Aplicación principal Flask para gestión de tareas
+# Proyecto: algoRitmo.py
+# Autor: JuanFuent.es
+# Descripción: Este archivo inicia la aplicación web Flask, configura rutas y conecta con la base de datos.
+# Documentación Flask: https://flask.palletsprojects.com/
+# Documentación oficial Python: https://docs.python.org/3/
+#
+# Este archivo es el punto de entrada de la app. Aquí se inicializa la base de datos y se definen los endpoints principales.
+#
+# Referencias:
+# - https://flask.palletsprojects.com/en/2.3.x/tutorial/
+# - https://docs.python.org/3/library/sqlite3.html
+#
 from flask import Flask, render_template, request, jsonify, redirect, url_for
 from models.task import Task
 from models.database import Database
@@ -8,12 +21,15 @@ app = Flask(__name__)
 app.config.from_object(Config)
 
 # Configuración de la base de datos
+# Se crea una instancia de la clase Database, que gestiona la conexión y operaciones con SQLite.
 database = Database(app.config['DATABASE_PATH'])
 
 # Inicializar la base de datos al crear la aplicación
+# Esto asegura que la tabla 'tasks' exista antes de cualquier operación.
 with app.app_context():
     database.init_database()
 
+# Endpoint principal: muestra la lista de tareas en la página de inicio
 @app.route('/')
 def index():
     """Página principal que muestra la lista de tareas"""
@@ -94,6 +110,7 @@ def toggle_task(task_id):
     database.update_task(task)
     return jsonify(task.to_dict())
 
+# Endpoint de salud para monitoreo y pruebas automáticas
 @app.route('/health')
 def health_check():
     """Endpoint para verificar el estado de la aplicación"""
