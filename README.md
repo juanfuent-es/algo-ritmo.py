@@ -1,6 +1,5 @@
-# 📝 Rutina.py - Sistema de Control de Tareas
-
-Un sistema simple y efectivo para organizar tus tareas diarias, creado con tecnologías web básicas.
+# 📝 Rutina.py - Crea tu primera app en Python desde cero
+Aprende programación paso a paso, organiza tu día a día con procesos computacionales.
 
 ## 🎯 ¿Qué hace este proyecto?
 
