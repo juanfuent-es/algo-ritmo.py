@@ -29,20 +29,45 @@ database = Database(app.config['DATABASE_PATH'])
 with app.app_context():
     database.init_database()
 
+# Variables de entorno seguras para autenticación
+USER = os.environ.get("APP_USER")
+PASSWORD = os.environ.get("APP_PASSWORD")
+
+def check_auth(username, password):
+    return username == USER and password == PASSWORD
+
+def authenticate():
+    return Response(
+        "Acceso restringido", 401,
+        {"WWW-Authenticate": 'Basic realm="Login Required'"}
+    )
+
+def require_auth(f):
+    def wrapper(*args, **kwargs):
+        auth = request.authorization
+        if not auth or not check_auth(auth.username, auth.password):
+            return authenticate()
+        return f(*args, **kwargs)
+    wrapper.__name__ = f.__name__
+    return wrapper
+
 # Endpoint principal: muestra la lista de tareas en la página de inicio
 @app.route('/')
+@require_auth
 def index():
     """Página principal que muestra la lista de tareas"""
     tasks = database.get_all_tasks()
     return render_template('index.html', tasks=tasks)
 
 @app.route('/api/tasks', methods=['GET'])
+@require_auth
 def get_tasks():
     """API endpoint para obtener todas las tareas"""
     tasks = database.get_all_tasks()
     return jsonify([task.to_dict() for task in tasks])
 
 @app.route('/api/tasks', methods=['POST'])
+@require_auth
 def create_task():
     """API endpoint para crear una nueva tarea"""
     data = request.get_json()
@@ -63,6 +88,7 @@ def create_task():
     return jsonify(task.to_dict()), 201
 
 @app.route('/api/tasks/<int:task_id>', methods=['PUT'])
+@require_auth
 def update_task(task_id):
     """API endpoint para actualizar una tarea existente"""
     data = request.get_json()
@@ -90,6 +116,7 @@ def update_task(task_id):
     return jsonify(task.to_dict())
 
 @app.route('/api/tasks/<int:task_id>', methods=['DELETE'])
+@require_auth
 def delete_task(task_id):
     """API endpoint para eliminar una tarea"""
     task = database.get_task_by_id(task_id)
@@ -100,6 +127,7 @@ def delete_task(task_id):
     return jsonify({'message': 'Tarea eliminada exitosamente'})
 
 @app.route('/api/tasks/<int:task_id>/toggle', methods=['PUT'])
+@require_auth
 def toggle_task(task_id):
     """API endpoint para cambiar el estado de completado de una tarea"""
     task = database.get_task_by_id(task_id)
