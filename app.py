@@ -40,7 +40,7 @@ def check_auth(username, password):
 def authenticate():
     return Response(
         "Acceso restringido", 401,
-        {"WWW-Authenticate": 'Basic realm="Login Required'"}
+        {"WWW-Authenticate": 'Basic realm="Login Required"'}
     )
 
 def require_auth(f):
