@@ -11,7 +11,8 @@
 # - https://flask.palletsprojects.com/en/2.3.x/tutorial/
 # - https://docs.python.org/3/library/sqlite3.html
 #
-from flask import Flask, render_template, request, jsonify, redirect, url_for
+
+from flask import Flask, render_template, request, jsonify, redirect, url_for, Response
 from models.task import Task
 from models.database import Database
 from config import Config
